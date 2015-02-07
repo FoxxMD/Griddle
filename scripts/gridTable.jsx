@@ -34,7 +34,10 @@ var GridTable = React.createClass({
       "parentRowExpandedComponent": "▼",
       "externalLoadingComponent": null,
       "externalIsLoading": false,
-      "enableSort": true
+      "enableSort": true,
+
+      "useCustomGridRowComponent": false,
+      "customGridRowComponent": null
     }
   },
   componentDidMount: function() {
@@ -85,7 +88,8 @@ var GridTable = React.createClass({
             parentRowExpandedClassName={that.props.parentRowExpandedClassName} parentRowCollapsedClassName={that.props.parentRowCollapsedClassName}
             parentRowExpandedComponent={that.props.parentRowExpandedComponent} parentRowCollapsedComponent={that.props.parentRowCollapsedComponent}
             data={row} metadataColumns={that.props.metadataColumns} columnMetadata={that.props.columnMetadata} key={index} columns={that.props.columns}
-            uniqueId={_.uniqueId("grid_row") } hasChildren={hasChildren} tableClassName={that.props.className}/>)
+            uniqueId={_.uniqueId("grid_row") } hasChildren={hasChildren} tableClassName={that.props.className}
+            useCustomGridRowComponent={that.props.useCustomGridRowComponent} customGridRowComponent={that.props.customGridRowComponent} />)
       });
     }
 

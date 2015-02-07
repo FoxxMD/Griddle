@@ -103,11 +103,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            "metadataColumns": [],
 	            "showFilter": false,
 	            "showSettings": false,
+	            "useCustomGridRowComponent": false,
 	            "useCustomRowComponent": false,
 	            "useCustomGridComponent": false,
 	            "useCustomPagerComponent": false,
 	            "useGriddleStyles": true,
 	            "useGriddleIcons": true,
+	            "customGridRowComponent": null,
 	            "customRowComponent": null,
 	            "customGridComponent": null,
 	            "customPagerComponent": {},
@@ -572,7 +574,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	              sortAscendingComponent: this.props.sortAscendingComponent, sortDescendingComponent: this.props.sortDescendingComponent, 
 	              parentRowCollapsedComponent: this.props.parentRowCollapsedComponent, parentRowExpandedComponent: this.props.parentRowExpandedComponent, 
 	              bodyHeight: this.props.bodyHeight, infiniteScrollSpacerHeight: this.props.infiniteScrollSpacerHeight, externalLoadingComponent: this.props.externalLoadingComponent, 
-	              externalIsLoading: this.props.externalIsLoading, hasMorePages: hasMorePages})))
+	              externalIsLoading: this.props.externalIsLoading, hasMorePages: hasMorePages, useCustomGridRowComponent: this.props.useCustomGridRowComponent, 
+	              customGridRowComponent: this.props.customGridRowComponent})))
 	    },
 	    getContentSection: function(data, cols, meta, pagingContent, hasMorePages){
 	        if(this.props.useCustomGridComponent && this.props.customGridComponent !== null){
@@ -719,7 +722,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      "parentRowExpandedComponent": "▼",
 	      "externalLoadingComponent": null,
 	      "externalIsLoading": false,
-	      "enableSort": true
+	      "enableSort": true,
+
+	      "useCustomGridRowComponent": false,
+	      "customGridRowComponent": null
 	    }
 	  },
 	  componentDidMount: function() {
@@ -770,7 +776,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            parentRowExpandedClassName: that.props.parentRowExpandedClassName, parentRowCollapsedClassName: that.props.parentRowCollapsedClassName, 
 	            parentRowExpandedComponent: that.props.parentRowExpandedComponent, parentRowCollapsedComponent: that.props.parentRowCollapsedComponent, 
 	            data: row, metadataColumns: that.props.metadataColumns, columnMetadata: that.props.columnMetadata, key: index, columns: that.props.columns, 
-	            uniqueId: _.uniqueId("grid_row"), hasChildren: hasChildren, tableClassName: that.props.className}))
+	            uniqueId: _.uniqueId("grid_row"), hasChildren: hasChildren, tableClassName: that.props.className, 
+	            useCustomGridRowComponent: that.props.useCustomGridRowComponent, customGridRowComponent: that.props.customGridRowComponent}))
 	      });
 	    }
 
@@ -1323,7 +1330,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        "parentRowCollapsedClassName": "parent-row",
 	        "parentRowExpandedClassName": "parent-row expanded",
 	        "parentRowCollapsedComponent": "▶",
-	        "parentRowExpandedComponent": "▼"
+	        "parentRowExpandedComponent": "▼",
+
+	        "useCustomGridRowComponent": false,
+	        "customGridRowComponent": null
 	      };
 	    },
 	    getInitialState: function(){
@@ -1351,11 +1361,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if(typeof this.props.data === "undefined"){return (React.createElement("tbody", null));}
 	        var arr = [];
 
-	        arr.push(React.createElement(GridRow, {useGriddleStyles: this.props.useGriddleStyles, isSubGriddle: this.props.isSubGriddle, data: this.props.data, columns: this.props.columns, columnMetadata: this.props.columnMetadata, metadataColumns: that.props.metadataColumns, 
-	          hasChildren: that.props.hasChildren, toggleChildren: that.toggleChildren, showChildren: that.state.showChildren, key: that.props.uniqueId, useGriddleIcons: that.props.useGriddleIcons, 
-	          parentRowExpandedClassName: this.props.parentRowExpandedClassName, parentRowCollapsedClassName: this.props.parentRowCollapsedClassName, 
-	          parentRowExpandedComponent: this.props.parentRowExpandedComponent, parentRowCollapsedComponent: this.props.parentRowCollapsedComponent}));
-	          var children = null;
+	        var gridRowOptions = {
+	            useGriddleStyles: this.props.useGriddleStyles,
+	            isSubGriddle: this.props.isSubGriddle,
+	            data: this.props.data,
+	            columns: this.props.columns,
+	            columnMetadata: this.props.columnMetadata,
+	            metadataColumns: that.props.metadataColumns,
+
+	            hasChildren: that.props.hasChildren,
+	            toggleChildren: that.toggleChildren,
+	            showChildren: that.state.showChildren,
+	            key: that.props.uniqueId,
+	            useGriddleIcons: that.props.useGriddleIcons,
+
+	            parentRowExpandedClassName: this.props.parentRowExpandedClassName,
+	            parentRowCollapsedClassName: this.props.parentRowCollapsedClassName,
+
+	            parentRowExpandedComponent: this.props.parentRowExpandedComponent,
+	            parentRowCollapsedComponent: this.props.parentRowCollapsedComponent
+	        };
+
+	        if (this.props.useCustomGridRowComponent && typeof this.props.customGridRowComponent === 'function') {
+	            arr.push(React.createElement(this.props.customGridRowComponent, gridRowOptions));
+	        } else {
+	            arr.push(React.createElement(GridRow, gridRowOptions));
+	        }
+
+	        var children = null;
 
 	        if(that.state.showChildren){
 	            children =  that.props.hasChildren && this.props.data["children"].map(function(row, index){

@@ -40,11 +40,13 @@ var Griddle = React.createClass({
             "metadataColumns": [],
             "showFilter": false,
             "showSettings": false,
+            "useCustomGridRowComponent": false,
             "useCustomRowComponent": false,
             "useCustomGridComponent": false,
             "useCustomPagerComponent": false,
             "useGriddleStyles": true,
             "useGriddleIcons": true,
+            "customGridRowComponent": null,
             "customRowComponent": null,
             "customGridComponent": null,
             "customPagerComponent": {},
@@ -509,7 +511,8 @@ var Griddle = React.createClass({
               sortAscendingComponent={this.props.sortAscendingComponent} sortDescendingComponent={this.props.sortDescendingComponent}
               parentRowCollapsedComponent={this.props.parentRowCollapsedComponent} parentRowExpandedComponent={this.props.parentRowExpandedComponent}
               bodyHeight={this.props.bodyHeight} infiniteScrollSpacerHeight={this.props.infiniteScrollSpacerHeight} externalLoadingComponent={this.props.externalLoadingComponent}
-              externalIsLoading={this.props.externalIsLoading} hasMorePages={hasMorePages} /></div>)
+              externalIsLoading={this.props.externalIsLoading} hasMorePages={hasMorePages} useCustomGridRowComponent={this.props.useCustomGridRowComponent}
+              customGridRowComponent={this.props.customGridRowComponent} /></div>)
     },
     getContentSection: function(data, cols, meta, pagingContent, hasMorePages){
         if(this.props.useCustomGridComponent && this.props.customGridComponent !== null){

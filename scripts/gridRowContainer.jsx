@@ -14,7 +14,10 @@ var GridRowContainer = React.createClass({
         "parentRowCollapsedClassName": "parent-row",
         "parentRowExpandedClassName": "parent-row expanded",
         "parentRowCollapsedComponent": "▶",
-        "parentRowExpandedComponent": "▼"
+        "parentRowExpandedComponent": "▼",
+
+        "useCustomGridRowComponent": false,
+        "customGridRowComponent": null
       };
     },
     getInitialState: function(){
@@ -42,11 +45,34 @@ var GridRowContainer = React.createClass({
         if(typeof this.props.data === "undefined"){return (<tbody></tbody>);}
         var arr = [];
 
-        arr.push(<GridRow useGriddleStyles={this.props.useGriddleStyles} isSubGriddle={this.props.isSubGriddle} data={this.props.data} columns={this.props.columns} columnMetadata={this.props.columnMetadata} metadataColumns={that.props.metadataColumns}
-          hasChildren={that.props.hasChildren} toggleChildren={that.toggleChildren} showChildren={that.state.showChildren} key={that.props.uniqueId} useGriddleIcons={that.props.useGriddleIcons}
-          parentRowExpandedClassName={this.props.parentRowExpandedClassName} parentRowCollapsedClassName={this.props.parentRowCollapsedClassName}
-          parentRowExpandedComponent={this.props.parentRowExpandedComponent} parentRowCollapsedComponent={this.props.parentRowCollapsedComponent}/>);
-          var children = null;
+        var gridRowOptions = {
+            useGriddleStyles: this.props.useGriddleStyles,
+            isSubGriddle: this.props.isSubGriddle,
+            data: this.props.data,
+            columns: this.props.columns,
+            columnMetadata: this.props.columnMetadata,
+            metadataColumns: that.props.metadataColumns,
+
+            hasChildren: that.props.hasChildren,
+            toggleChildren: that.toggleChildren,
+            showChildren: that.state.showChildren,
+            key: that.props.uniqueId,
+            useGriddleIcons: that.props.useGriddleIcons,
+
+            parentRowExpandedClassName: this.props.parentRowExpandedClassName,
+            parentRowCollapsedClassName: this.props.parentRowCollapsedClassName,
+
+            parentRowExpandedComponent: this.props.parentRowExpandedComponent,
+            parentRowCollapsedComponent: this.props.parentRowCollapsedComponent
+        };
+
+        if (this.props.useCustomGridRowComponent && typeof this.props.customGridRowComponent === 'function') {
+            arr.push(React.createElement(this.props.customGridRowComponent, gridRowOptions));
+        } else {
+            arr.push(React.createElement(GridRow, gridRowOptions));
+        }
+
+        var children = null;
 
         if(that.state.showChildren){
             children =  that.props.hasChildren && this.props.data["children"].map(function(row, index){
