@@ -144,6 +144,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            "settingsToggleClassName": "settings",
 	            "nextClassName": "griddle-next",
 	            "previousClassName": "griddle-previous",
+	            "headerClassName": "griddle-header",
+	            "headerStyles": {},
 	            /* icon components */
 	            "sortAscendingComponent": " ▲",
 	            "sortDescendingComponent": " ▼",
@@ -1237,7 +1239,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	           "sortDescendingClassName": "sort-descending",
 	           "sortAscendingComponent": " ▲",
 	           "sortDescendingComponent": " ▼",
-	           "enableSort": true,  
+	           "enableSort": true,
+	           "headerClassName": "",
+	           "headerStyles": {},
 	           "changeSort": null
 	        }
 	    },
@@ -1299,7 +1303,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        return(
 	            React.createElement("thead", null, 
-	                React.createElement("tr", {style: this.titleStyles}, 
+	                React.createElement("tr", {
+	                    className: this.props.headerClassName, 
+	                    style: this.props.headerStyles}, 
 	                    nodes
 	                )
 	            )
